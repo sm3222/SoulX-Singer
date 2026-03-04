@@ -516,12 +516,12 @@ class F0Extractor:
 
 if __name__ == "__main__":
     model_path = (
-        "pretrained_models/rmvpe/rmvpe.pt"
+        "pretrained_models/SoulX-Singer-Preprocess/rmvpe/rmvpe.pt"
     )
-    audio_path = "./outputs/transcription/test.wav"
+    audio_path = "example/audio/zh_prompt.mp3"
 
     pe = F0Extractor(
         model_path,
         device="cuda",
     )
-    f0 = pe.process(audio_path)
+    f0 = pe.process(audio_path, f0_path="example/audio/zh_prompt_f0.npy")

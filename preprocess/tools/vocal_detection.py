@@ -316,5 +316,5 @@ class VocalDetector:
 
 if __name__ == "__main__":
     m = VocalDetector(cut_wavs_output_dir="outputs/transcription/cut_wavs")
-    segment_infos = m.process("./outputs/transcription/test.wav")
+    segment_infos = m.process("example/audio/zh_prompt.mp3", np.load("example/audio/zh_prompt_f0.npy"))
     print(segment_infos)

@@ -120,9 +120,10 @@ class _ASRZhModel:
         raw_timestamps = [[t[0] / 1000, t[1] / 1000] for t in out["timestamp"]]
         words, word_durs = _build_words_with_gaps(raw_words, raw_timestamps, wav_fn)
 
-        if os.path.exists(wav_fn.replace(".wav", "_f0.npy")):
+        f0_path = os.path.splitext(wav_fn)[0] + "_f0.npy"
+        if os.path.exists(f0_path):
             words, word_durs = _word_dur_post_process(
-                words, word_durs, np.load(wav_fn.replace(".wav", "_f0.npy"))
+                words, word_durs, np.load(f0_path)
             )
 
         return words, word_durs
@@ -179,9 +180,10 @@ class _ASREnModel:
 
         words, durs = _build_words_with_gaps(raw_words, raw_timestamps, wav_fn)
 
-        if os.path.exists(wav_fn.replace(".wav", "_f0.npy")):
+        f0_path = os.path.splitext(wav_fn)[0] + "_f0.npy"
+        if os.path.exists(f0_path):
             words, durs = _word_dur_post_process(
-                words, durs, np.load(wav_fn.replace(".wav", "_f0.npy"))
+                words, durs, np.load(f0_path)
             )
 
         return words, durs
@@ -248,8 +250,10 @@ class LyricTranscriber:
             if self.en_model is None:
                 # Lazy-load NeMo model only when English is actually used.
                 if v:
-                    print("[lyric transcription] init English ASR, please make sure NeMo is installed")
+                    print("[lyric transcription] init English ASR start, please make sure NeMo is installed and wait for a while")
                 self.en_model = _ASREnModel(model_path=self.en_model_path, device=self.device)
+                if v:
+                    print("[lyric transcription] init English ASR success")
             out = self.en_model.process(wav_fn)
         else:
             out = self.zh_model.process(wav_fn)
@@ -271,9 +275,9 @@ class LyricTranscriber:
 
 if __name__ == "__main__":
     m = LyricTranscriber(
-        zh_model_path="pretrained_models/speech_seaco_paraformer_large_asr_nat-zh-cn-16k-common-vocab8404-pytorch",
-        en_model_path="pretrained_models/parakeet-tdt-0.6b-v2/parakeet-tdt-0.6b-v2.nemo",
+        zh_model_path="pretrained_models/SoulX-Singer-Preprocess/speech_seaco_paraformer_large_asr_nat-zh-cn-16k-common-vocab8404-pytorch",
+        en_model_path="pretrained_models/SoulX-Singer-Preprocess/parakeet-tdt-0.6b-v2/parakeet-tdt-0.6b-v2.nemo",
         device="cuda"
     )
-    print(m.process("example/test/asr_zh.wav", language="Mandarin"))
-    print(m.process("example/test/asr_en.wav", language="English"))
+    print(m.process("example/audio/zh_prompt.mp3", language="Mandarin"))
+    print(m.process("example/audio/en_prompt.mp3", language="English"))

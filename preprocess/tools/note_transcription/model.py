@@ -509,14 +509,23 @@ class NoteTranscriber:
 
 if __name__ == "__main__":
 
-    items = json.load(open("example/test/rosvot_input.json", "r"))
-    item = items[0]
+    item = {
+        'item_name': 'vocal_0', 
+        'wav_fn': 'example/audio/zh_prompt.mp3', 
+        'start_time_ms': 320, 
+        'end_time_ms': 10687, 
+        'origin_wav_fn': 'example/audio/zh_prompt.mp3', 
+        'duration': 10367, 
+        'words': ['<SP>', '除', '了', '想', '你', '<SP>', '除', '了', '爱', '你', '<SP>', '我', '什', '么', '什', '么', '都', '愿', '意'], 
+        'word_durs': [0.21, 0.36, 0.26, 0.7000000000000001, 0.96, 0.3800000000000001, 0.43999999999999995, 0.3799999999999999, 0.6400000000000001, 0.9600000000000002, 1.1199999999999999, 0.28000000000000025, 0.3799999999999999, 0.3199999999999994, 0.3200000000000003, 0.3799999999999999, 0.3200000000000003, 0.5, 1.457981859410431], 
+        'language': 'Mandarin'
+    }
 
     m = NoteTranscriber(
-        rosvot_model_path="pretrained_models/rosvot/rosvot/model.pt", 
-        rwbd_model_path="pretrained_models/rosvot/rwbd/model.pt", 
+        rosvot_model_path="pretrained_models/SoulX-Singer-Preprocess/rosvot/rosvot/model.pt", 
+        rwbd_model_path="pretrained_models/SoulX-Singer-Preprocess/rosvot/rwbd/model.pt", 
         device="cuda"
     )
-    out = m.process(item)
+    out = m.process(item, segment_info=item)
 
     print(out)
